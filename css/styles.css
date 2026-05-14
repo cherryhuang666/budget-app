@@ -96,9 +96,11 @@ input, select, textarea, button {
 .app-logo {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 2px 8px var(--color-shadow);
+  border-radius: 12px;
+  object-fit: contain;
+  background: var(--color-primary-soft);
+  padding: 4px;
+  flex-shrink: 0;
 }
 .app-title {
   font-size: var(--fs-lg);
@@ -746,6 +748,25 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .setting-row:first-of-type { border-top: 0; }
 .setting-row .ic { font-size: var(--fs-lg); width: 28px; }
+.setting-row .ic.ic-brand {
+  width: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  line-height: 0;
+}
+.setting-row .ic.ic-brand img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  border-radius: 10px;
+  object-fit: contain;
+  background: var(--color-primary-soft);
+  padding: 3px;
+  box-shadow: none;
+}
 .setting-row .label { flex: 1; font-size: var(--fs-base); }
 .setting-row .value { color: var(--color-text-soft); font-size: var(--fs-sm); }
 
