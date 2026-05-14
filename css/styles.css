@@ -106,15 +106,6 @@ input, select, textarea, button {
   letter-spacing: 0.5px;
   flex: 1;
 }
-.app-header-action {
-  background: transparent;
-  border: 0;
-  color: var(--color-text-soft);
-  font-size: var(--fs-md);
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-
 /* ============ 主内容 ============ */
 main {
   flex: 1;

@@ -140,10 +140,6 @@ const App = {
     document.querySelectorAll('[data-open-record]').forEach(b => {
       b.addEventListener('click', () => this.openRecordSheet(b.dataset.openRecord));
     });
-    document.getElementById('btn-quick-add').addEventListener('click', () => {
-      const region = this.state.currentView === 'view-taiwan' ? 'taiwan' : 'mainland';
-      this.openRecordSheet(region);
-    });
 
     // 字体大小
     document.getElementById('font-size-options').addEventListener('click', async e => {
