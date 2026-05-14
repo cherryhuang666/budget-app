@@ -718,7 +718,10 @@ textarea { resize: vertical; min-height: 60px; }
 .tab .tab-ic-home svg { filter: none; }
 /* 设置齿轮：纯描边矢量，无 emoji 立体/阴影感 */
 .tab .tab-ic-settings svg { filter: none; }
-.tab.active { color: var(--color-primary); font-weight: 600; }
+.tab.active {
+  color: var(--color-text);
+  font-weight: 700;
+}
 
 /* 文字徽章：CN / TW */
 .ic-badge {
