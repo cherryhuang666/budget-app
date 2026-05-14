@@ -1,5 +1,5 @@
 // 张婷要省钱 - Service Worker (离线可用)
-const CACHE_VERSION = 'zt-budget-v28';
+const CACHE_VERSION = 'zt-budget-v29';
 const APP_SHELL = [
   './',
   './index.html',
