@@ -714,6 +714,10 @@ textarea { resize: vertical; min-height: 60px; }
   height: 24px;
   display: block;
 }
+/* 首页三色珠子：保持固定颜色，选中态不改变红蓝黄 */
+.tab .tab-ic-home svg { filter: none; }
+/* 设置齿轮：纯描边矢量，无 emoji 立体/阴影感 */
+.tab .tab-ic-settings svg { filter: none; }
 .tab.active { color: var(--color-primary); font-weight: 600; }
 
 /* 文字徽章：CN / TW */
