@@ -29,10 +29,11 @@ const App = {
         console.warn('Service Worker 注册失败:', err)
       );
     }
-    // 异步初始化云端，并显示状态
-    Cloud.init().then(async () => {
+    // 异步初始化云端：显示状态，并在启动时拉一次远端最新数据
+    Cloud.init().then(async (ok) => {
       const el = document.getElementById('cloud-status-label');
       if (el) el.textContent = await Cloud.statusLabel();
+      if (ok) Cloud.scheduleAutoSync(800);
     });
   },
 
@@ -169,8 +170,17 @@ const App = {
       e.target.value = '';
     });
 
-    // 数据变更事件
+    // 同步拉下来的远端变更 → 只刷新 UI（避免循环触发自动同步）
     document.addEventListener('data-changed', () => this.refreshAll());
+
+    // 本地写入 → 调度一次自动同步
+    document.addEventListener('db-mutation', () => Cloud.scheduleAutoSync());
+
+    // 切回标签页 / 唤醒手机时，自动拉一次远端变更
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) Cloud.scheduleAutoSync(300);
+    });
+    window.addEventListener('online', () => Cloud.scheduleAutoSync(500));
   },
 
   _updateChartTabs() {

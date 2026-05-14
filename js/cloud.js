@@ -17,6 +17,8 @@ const Cloud = {
   serverUrl: null,
   vaultKey: null,
   ready: false,
+  _syncing: false,
+  _autoSyncTimer: null,
 
   async init() {
     const url = await DB.getMeta('serverUrl');
@@ -83,6 +85,9 @@ const Cloud = {
       if (!ok) throw new Error('云同步未启用');
     }
 
+    this._syncing = true;
+    this._updateStatusLabel('同步中…');
+
     const lastSyncAt = (await DB.getMeta('lastSyncAt')) || 0;
     let pushed = 0, pulled = 0;
 
@@ -130,8 +135,39 @@ const Cloud = {
     }
 
     await DB.setMeta('lastSyncAt', pull.serverTime || Date.now());
-    document.dispatchEvent(new CustomEvent('data-changed'));
+    this._syncing = false;
+    this._updateStatusLabel();
+    // 触发 UI 刷新（拉下来的远端变更要显示出来）
+    document.dispatchEvent(new CustomEvent('data-changed', { detail: { fromSync: true } }));
     return { pushed, pulled };
+  },
+
+  // 防抖式自动同步：数据变更后延迟一小段时间触发，多次变更合并成一次同步
+  scheduleAutoSync(delay = 2500) {
+    if (!this.ready) return;
+    if (this._syncing) return; // 正在同步，跳过
+    if (this._autoSyncTimer) clearTimeout(this._autoSyncTimer);
+    this._autoSyncTimer = setTimeout(() => this._doAutoSync(), delay);
+  },
+
+  async _doAutoSync() {
+    this._autoSyncTimer = null;
+    if (this._syncing) return;
+    try {
+      await this.syncNow();
+    } catch (e) {
+      // 自动同步失败不打扰用户，只更新状态标签
+      console.warn('[cloud] auto-sync failed:', e);
+      this._syncing = false;
+      this._updateStatusLabel('已启用 · 上次同步失败');
+    }
+  },
+
+  _updateStatusLabel(forceText) {
+    const el = document.getElementById('cloud-status-label');
+    if (!el) return;
+    if (forceText) { el.textContent = forceText; return; }
+    this.statusLabel().then(s => { el.textContent = s; });
   },
 
   async stats() {

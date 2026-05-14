@@ -66,6 +66,11 @@ const DB = {
     });
   },
 
+  // 内部：本地数据发生写入后触发；用于让 Cloud 调度自动同步
+  _emitLocalMutation() {
+    try { document.dispatchEvent(new CustomEvent('db-mutation')); } catch (_) {}
+  },
+
   // ============ 交易记录 ============
   async addTransaction(t) {
     await this.open();
@@ -86,6 +91,7 @@ const DB = {
     };
     const tx = this._tx(['transactions'], 'readwrite');
     await this._wrap(tx.objectStore('transactions').put(row));
+    this._emitLocalMutation();
     return row;
   },
 
@@ -97,6 +103,7 @@ const DB = {
     if (!existing) return null;
     const updated = { ...existing, ...patch, updatedAt: Date.now() };
     await this._wrap(store.put(updated));
+    this._emitLocalMutation();
     return updated;
   },
 
@@ -109,6 +116,7 @@ const DB = {
     await this.open();
     const tx = this._tx(['transactions'], 'readwrite');
     await this._wrap(tx.objectStore('transactions').delete(id));
+    this._emitLocalMutation();
   },
 
   async getAllTransactions() {
@@ -153,6 +161,7 @@ const DB = {
     config.updatedAt = Date.now();
     const tx = this._tx(['categories'], 'readwrite');
     await this._wrap(tx.objectStore('categories').put(config));
+    this._emitLocalMutation();
     return config;
   },
 
@@ -163,6 +172,7 @@ const DB = {
     const fresh = { id, region, type, groups: JSON.parse(JSON.stringify(def)), updatedAt: Date.now() };
     const tx = this._tx(['categories'], 'readwrite');
     await this._wrap(tx.objectStore('categories').put(fresh));
+    this._emitLocalMutation();
     return fresh;
   },
 
@@ -229,5 +239,6 @@ const DB = {
         await this._wrap(cStore.put(c));
       }
     }
+    this._emitLocalMutation();
   }
 };
