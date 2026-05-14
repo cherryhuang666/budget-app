@@ -716,7 +716,7 @@ textarea { resize: vertical; min-height: 60px; }
 }
 /* 首页三色柱：保持固定颜色 */
 .tab .tab-ic-home svg { filter: none; }
-/* 设置齿轮：纯描边矢量，无 emoji 立体/阴影感 */
+/* 设置：实心齿轮，颜色跟标签字（currentColor） */
 .tab .tab-ic-settings svg { filter: none; }
 .tab.active {
   color: var(--color-text);
