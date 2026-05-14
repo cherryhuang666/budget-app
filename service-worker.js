@@ -1,5 +1,5 @@
 // 张婷要省钱 - Service Worker (离线可用)
-const CACHE_VERSION = 'zt-budget-v26';
+const CACHE_VERSION = 'zt-budget-v27';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,7 +12,6 @@ const APP_SHELL = [
   './js/cloud.js',
   './js/app.js',
   './manifest.webmanifest',
-  './assets/app-brand.svg',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   // 第三方库（用 CDN 加载，离线时优先用缓存）

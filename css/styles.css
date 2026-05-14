@@ -96,10 +96,8 @@ input, select, textarea, button {
 .app-logo {
   width: 36px;
   height: 36px;
-  border-radius: 12px;
-  object-fit: contain;
-  background: var(--color-primary-soft);
-  padding: 4px;
+  border-radius: 10px;
+  object-fit: cover;
   flex-shrink: 0;
 }
 .app-title {
@@ -703,6 +701,19 @@ textarea { resize: vertical; min-height: 60px; }
   font-size: var(--fs-xs);
 }
 .tab .ic { font-size: 22px; line-height: 1; }
+.tab .tab-ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 22px;
+  color: inherit;
+}
+.tab .tab-ic svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
 .tab.active { color: var(--color-primary); font-weight: 600; }
 
 /* 文字徽章：CN / TW */
@@ -748,25 +759,6 @@ textarea { resize: vertical; min-height: 60px; }
 }
 .setting-row:first-of-type { border-top: 0; }
 .setting-row .ic { font-size: var(--fs-lg); width: 28px; }
-.setting-row .ic.ic-brand {
-  width: 36px;
-  min-width: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0;
-  line-height: 0;
-}
-.setting-row .ic.ic-brand img {
-  width: 32px;
-  height: 32px;
-  display: block;
-  border-radius: 10px;
-  object-fit: contain;
-  background: var(--color-primary-soft);
-  padding: 3px;
-  box-shadow: none;
-}
 .setting-row .label { flex: 1; font-size: var(--fs-base); }
 .setting-row .value { color: var(--color-text-soft); font-size: var(--fs-sm); }
 
