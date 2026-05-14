@@ -65,12 +65,17 @@ const App = {
       b.addEventListener('click', () => this.shiftRegionMonth(b.dataset.region, 1));
     });
 
-    // 月份快速跳转：点击月份文字弹出 input[type=month] 选年月
+    // 月份快速跳转：input[type=month] 覆盖在月份文字上方，原生处理点击弹出选择器
     document.querySelectorAll('[data-month-picker]').forEach(wrap => {
       const view = wrap.dataset.monthPicker; // home | mainland | taiwan
       const input = wrap.querySelector('.month-hidden-input');
       input.value = this.state.monthByView[view];
-      wrap.addEventListener('click', () => this._openMonthPicker(input));
+      // 点击 wrap 内的"非 input"区域（理论上不会发生，input 已 inset:0 覆盖整个 wrap），
+      // 兜底调用 showPicker，避免某些浏览器边缘情况点不开
+      wrap.addEventListener('click', (e) => {
+        if (e.target === input) return; // 由原生处理
+        this._openMonthPicker(input);
+      });
       input.addEventListener('change', () => {
         const v = input.value; // YYYY-MM
         if (!v) return;

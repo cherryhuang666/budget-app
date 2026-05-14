@@ -208,10 +208,12 @@ main {
   position: absolute;
   inset: 0;
   opacity: 0;
-  pointer-events: none;  /* 用 JS 主动调用 showPicker，避免误点 */
+  /* 让 input 自己接收点击：iOS Safari 14.1+ 原生支持 input[type=month] 弹出年月选择器，
+     不依赖 showPicker()（后者要 iOS 16.4+ 才有） */
   border: 0;
   background: transparent;
   font-size: 16px;
+  cursor: pointer;
 }
 
 /* "回到本月" 按钮 */
