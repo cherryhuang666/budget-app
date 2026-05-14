@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#7AC7A2" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="张婷要省钱" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+  <title>张婷要省钱</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- 顶部栏 -->
+  <header class="app-header">
+    <div class="app-header-inner">
+      <img src="app-logo.jpeg" alt="logo" class="app-logo" />
+      <div class="app-title">张婷要省钱！</div>
+      <button class="app-header-action" id="btn-quick-add" title="快速记账">＋</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== 首页 ===================== -->
+    <section class="view active" id="view-home">
+      <div class="month-switcher">
+        <button id="home-prev-month" aria-label="上个月">‹</button>
+        <div class="month-picker-wrap" data-month-picker="home">
+          <span class="month-label" id="home-month-label">2026年5月</span>
+          <input type="month" class="month-hidden-input" id="home-month-input" />
+        </div>
+        <button id="home-next-month" aria-label="下个月">›</button>
+      </div>
+      <div class="back-to-current-wrap" data-back-wrap="home">
+        <button class="back-to-current" data-view="home">↩ 回到本月</button>
+      </div>
+
+      <!-- 月度汇总：大陆 + 台湾 -->
+      <div class="summary-grid">
+        <div class="summary-card mainland">
+          <div class="region">大陆 <span class="badge">¥ CNY</span></div>
+          <div class="row"><span class="label">收入</span><span class="value income" id="sum-mainland-income">¥0.00</span></div>
+          <div class="row"><span class="label">支出</span><span class="value expense" id="sum-mainland-expense">¥0.00</span></div>
+          <div class="balance"><span class="label">结余</span><span class="value" id="sum-mainland-balance">¥0.00</span></div>
+        </div>
+        <div class="summary-card taiwan">
+          <div class="region">台湾 <span class="badge">NT$ TWD</span></div>
+          <div class="row"><span class="label">收入</span><span class="value income" id="sum-taiwan-income">NT$0.00</span></div>
+          <div class="row"><span class="label">支出</span><span class="value expense" id="sum-taiwan-expense">NT$0.00</span></div>
+          <div class="balance"><span class="label">结余</span><span class="value" id="sum-taiwan-balance">NT$0.00</span></div>
+        </div>
+      </div>
+
+      <!-- 图表分析 -->
+      <div class="card">
+        <div class="card-title">
+          <span>月度分析</span>
+          <span class="sub" id="chart-region-label">大陆 · 支出</span>
+        </div>
+        <div class="chart-tabs" id="chart-region-tabs">
+          <button class="chart-tab active" data-region="mainland">大陆</button>
+          <button class="chart-tab" data-region="taiwan">台湾</button>
+        </div>
+        <div class="chart-tabs" id="chart-type-tabs">
+          <button class="chart-tab active" data-type="expense">支出</button>
+          <button class="chart-tab" data-type="income">收入</button>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="pie-chart"></canvas>
+        </div>
+        <div class="category-list" id="category-breakdown">
+          <!-- 类别明细，可点开查看 -->
+        </div>
+      </div>
+
+      <!-- 收支对比 -->
+      <div class="card">
+        <div class="card-title">
+          <span id="bar-chart-title">近 6 个月 收支对比</span>
+          <span class="sub" id="bar-region-label">大陆</span>
+        </div>
+        <div class="chart-tabs" id="bar-region-tabs">
+          <button class="chart-tab active" data-region="mainland">大陆 ¥</button>
+          <button class="chart-tab" data-region="taiwan">台湾 NT$</button>
+        </div>
+        <div class="range-bar" id="bar-range-bar">
+          <button class="chip" data-range="1">1 月</button>
+          <button class="chip" data-range="2">2 月</button>
+          <button class="chip" data-range="3">3 月</button>
+          <button class="chip active" data-range="6">6 月</button>
+          <button class="chip" data-range="12">1 年</button>
+          <button class="chip" data-range="24">2 年</button>
+          <button class="chip" data-range="36">3 年</button>
+          <button class="chip" data-range="60">5 年</button>
+          <button class="chip" data-range="max">全部</button>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="bar-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 大陆 ===================== -->
+    <section class="view" id="view-mainland">
+      <div class="month-switcher">
+        <button class="month-prev" data-region="mainland">‹</button>
+        <div class="month-picker-wrap" data-month-picker="mainland">
+          <span class="month-label" data-month-label="mainland">2026年5月</span>
+          <input type="month" class="month-hidden-input" data-month-input="mainland" />
+        </div>
+        <button class="month-next" data-region="mainland">›</button>
+      </div>
+      <div class="back-to-current-wrap" data-back-wrap="mainland">
+        <button class="back-to-current" data-view="mainland">↩ 回到本月</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>本月小结</span>
+          <span class="sub" id="ml-this-month-net">结余 ¥0.00</span>
+        </div>
+        <div class="row" style="display:flex;justify-content:space-between;font-size:var(--fs-sm);">
+          <span>收入：<strong class="positive" style="color:var(--color-income);" id="ml-this-month-income">¥0.00</strong></span>
+          <span>支出：<strong style="color:var(--color-expense);" id="ml-this-month-expense">¥0.00</strong></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>记一笔（大陆）</span>
+          <span class="sub">¥ 人民币</span>
+        </div>
+        <button class="btn btn-primary" data-open-record="mainland">＋ 新建记录</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>本月明细</span></div>
+        <div class="tx-list" id="ml-tx-list">
+          <div class="empty-state"><div class="emoji">📒</div>本月还没有记录</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 台湾 ===================== -->
+    <section class="view" id="view-taiwan">
+      <div class="month-switcher">
+        <button class="month-prev" data-region="taiwan">‹</button>
+        <div class="month-picker-wrap" data-month-picker="taiwan">
+          <span class="month-label" data-month-label="taiwan">2026年5月</span>
+          <input type="month" class="month-hidden-input" data-month-input="taiwan" />
+        </div>
+        <button class="month-next" data-region="taiwan">›</button>
+      </div>
+      <div class="back-to-current-wrap" data-back-wrap="taiwan">
+        <button class="back-to-current" data-view="taiwan">↩ 回到本月</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>本月小结</span>
+          <span class="sub" id="tw-this-month-net">结余 NT$0.00</span>
+        </div>
+        <div class="row" style="display:flex;justify-content:space-between;font-size:var(--fs-sm);">
+          <span>收入：<strong style="color:var(--color-income);" id="tw-this-month-income">NT$0.00</strong></span>
+          <span>支出：<strong style="color:var(--color-expense);" id="tw-this-month-expense">NT$0.00</strong></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>记一笔（台湾）</span>
+          <span class="sub">NT$ 台币</span>
+        </div>
+        <button class="btn btn-primary" data-open-record="taiwan">＋ 新建记录</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>本月明细</span></div>
+        <div class="tx-list" id="tw-tx-list">
+          <div class="empty-state"><div class="emoji">📒</div>本月还没有记录</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 设置 ===================== -->
+    <section class="view" id="view-settings">
+      <div class="setting-section">
+        <h3>显示</h3>
+        <div class="setting-row">
+          <span class="ic">🔤</span>
+          <span class="label">字体大小</span>
+          <span class="value" id="font-size-cur">中</span>
+        </div>
+        <div class="font-size-options" id="font-size-options">
+          <button class="chip" data-scale="0.9">小</button>
+          <button class="chip active" data-scale="1">中</button>
+          <button class="chip" data-scale="1.15">大</button>
+          <button class="chip" data-scale="1.3">特大</button>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <h3>类别管理</h3>
+        <div class="setting-row" data-action="edit-cats" data-region="mainland" data-type="expense">
+          <span class="ic">🏷️</span>
+          <span class="label">大陆 · 支出类别</span>
+          <span class="value">›</span>
+        </div>
+        <div class="setting-row" data-action="edit-cats" data-region="mainland" data-type="income">
+          <span class="ic">💰</span>
+          <span class="label">大陆 · 收入类别</span>
+          <span class="value">›</span>
+        </div>
+        <div class="setting-row" data-action="edit-cats" data-region="taiwan" data-type="expense">
+          <span class="ic">🏷️</span>
+          <span class="label">台湾 · 支出类别</span>
+          <span class="value">›</span>
+        </div>
+        <div class="setting-row" data-action="edit-cats" data-region="taiwan" data-type="income">
+          <span class="ic">💰</span>
+          <span class="label">台湾 · 收入类别</span>
+          <span class="value">›</span>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <h3>数据 · 备份</h3>
+        <div class="setting-row" data-action="export-xlsx">
+          <span class="ic">📊</span>
+          <span class="label">导出 Excel 备份</span>
+          <span class="value">.xlsx</span>
+        </div>
+        <div class="setting-row" data-action="import-xlsx">
+          <span class="ic">📈</span>
+          <span class="label">导入 Excel 备份</span>
+          <span class="value">›</span>
+        </div>
+        <div class="setting-row" data-action="export-json">
+          <span class="ic">📦</span>
+          <span class="label">导出 JSON 备份</span>
+          <span class="value">.json</span>
+        </div>
+        <div class="setting-row" data-action="import-json">
+          <span class="ic">📥</span>
+          <span class="label">导入 JSON 备份</span>
+          <span class="value">›</span>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <h3>云端同步</h3>
+        <div class="setting-row" data-action="cloud-status">
+          <span class="ic">☁️</span>
+          <span class="label">同步状态</span>
+          <span class="value" id="cloud-status-label">未启用</span>
+        </div>
+        <div class="setting-row" data-action="cloud-setup">
+          <span class="ic">🔧</span>
+          <span class="label">设置 / 启用云同步</span>
+          <span class="value">›</span>
+        </div>
+        <div class="setting-row" data-action="cloud-sync-now">
+          <span class="ic">🔄</span>
+          <span class="label">立即同步</span>
+          <span class="value">›</span>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <h3>关于</h3>
+        <div class="setting-row">
+          <span class="ic">💌</span>
+          <span class="label">张婷要省钱</span>
+          <span class="value">v1.0</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部导航 -->
+  <nav class="tabbar">
+    <button class="tab active" data-view="view-home"><span class="ic">📊</span>首页</button>
+    <button class="tab" data-view="view-mainland"><span class="ic-badge mainland">CN</span>大陆</button>
+    <button class="tab" data-view="view-taiwan"><span class="ic-badge taiwan">TW</span>台湾</button>
+    <button class="tab" data-view="view-settings"><span class="ic">⚙️</span>设置</button>
+  </nav>
+
+  <!-- 隐藏的导入文件输入 -->
+  <input type="file" id="file-import" accept=".json,application/json" style="display:none" />
+  <input type="file" id="file-import-xlsx" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" />
+
+  <!-- 第三方库 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- 应用代码 -->
+  <script src="js/defaults.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/cloud.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
